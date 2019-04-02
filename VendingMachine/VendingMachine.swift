@@ -22,7 +22,7 @@ enum VendingSelection{
     case sportsDrink
     case gum
 }
-protocol VendingItem{
+protocol VendingItem {
     var price: Double { get }
     var quantity: Int { get set }
 }
@@ -32,6 +32,8 @@ protocol VendingMachine {
     var amountDeposited: Double { get set }
     
     init(inventory: [VendingSelection: VendingItem])
+    func vend(selection: VendingSelection, quantity: Int) throws
+    func deposit(_ amount:Double)
 }
 
 
