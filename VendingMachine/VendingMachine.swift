@@ -17,10 +17,10 @@ enum VendingSelection{
     case wrap
     case candyBar
     case popTart
-    case water
-    case fruitJuice
-    case sportsDrink
-    case gum
+//    case water
+//    case fruitJuice
+//    case sportsDrink
+//    case gum
 }
 protocol VendingItem{
     var price: Double { get }
