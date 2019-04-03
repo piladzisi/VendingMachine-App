@@ -48,9 +48,15 @@ class PlistConverter{
     static func dictionary(fromFile name: String, ofType type: String ) throws -> [String:AnyObject] {
         guard let path = Bundle.main.path(forResource: name, ofType: type) else { throw InventoryError.invalidResource
             }
-        guard let dictionary = NSDictionary(contentsOfFile: path) else {
+        guard let dictionary = NSDictionary(contentsOfFile: path) as? [String: AnyObject] else {
             throw InventoryError.conversionFailure
         }
+        return dictionary
+    }
+}
+class InventoryUnarchiver {
+    static func vendingInventory (fromDictionary dictionary: [String : AnyObject ]) -> [VendingSelection : VendingItem] {
+        
     }
 }
 class FoodVendingMachine: VendingMachine {
