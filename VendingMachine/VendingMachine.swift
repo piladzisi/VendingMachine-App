@@ -40,7 +40,19 @@ struct Item: VendingItem {
     let price: Double
     var quantity: Int
 }
-
+enum InventoryError: Error{
+    case invalidResource
+    case conversionFailure
+}
+class PlistConverter{
+    static func dictionary(fromFile name: String, ofType type: String ) throws -> [String:AnyObject] {
+        guard let path = Bundle.main.path(forResource: name, ofType: type) else { throw InventoryError.invalidResource
+            }
+        guard let dictionary = NSDictionary(contentsOfFile: path) else {
+            throw InventoryError.conversionFailure
+        }
+    }
+}
 class FoodVendingMachine: VendingMachine {
     let selection: [VendingSelection] = [.soda, .dietSoda, .chips, .cookie,.wrap, .sandwich, .candyBar, .popTart, .water, .fruitJuice, .sportsDrink, .gum]
     var inventory: [VendingSelection : VendingItem]
