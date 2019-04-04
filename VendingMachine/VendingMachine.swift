@@ -65,9 +65,10 @@ class InventoryUnarchiver {
                 
                 guard let selection = VendingSelection(rawValue: key) else { throw InventoryError.invalidSelection
                }
+                 inventory.updateValue(item, forKey: selection)
             }
         }
-        return inventory
+       return inventory
         }
     }
 
