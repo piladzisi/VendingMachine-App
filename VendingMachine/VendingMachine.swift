@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum VendingSelection{
+enum VendingSelection: String {
     case soda
     case dietSoda
     case chips
@@ -43,6 +43,7 @@ struct Item: VendingItem {
 enum InventoryError: Error{
     case invalidResource
     case conversionFailure
+    case invalidSelection
 }
 class PlistConverter{
     static func dictionary(fromFile name: String, ofType type: String ) throws -> [String:AnyObject] {
@@ -55,10 +56,21 @@ class PlistConverter{
     }
 }
 class InventoryUnarchiver {
-    static func vendingInventory (fromDictionary dictionary: [String : AnyObject ]) -> [VendingSelection : VendingItem] {
+    static func vendingInventory (fromDictionary dictionary: [String: AnyObject ]) throws -> [VendingSelection: VendingItem] {
         
+        var inventory: [VendingSelection: VendingItem] = [:]
+        
+        for (key, value) in dictionary {
+            if let itemDictionary = value as? [String: Any], let price = itemDictionary ["price"] as? Double,let quantity = itemDictionary["quantity"] as? Int { let item = Item(price: price, quantity: quantity)
+                
+                guard let selection = VendingSelection(rawValue: key) else { throw InventoryError.invalidSelection
+               }
+            }
+        }
+        return inventory
+        }
     }
-}
+
 class FoodVendingMachine: VendingMachine {
     let selection: [VendingSelection] = [.soda, .dietSoda, .chips, .cookie,.wrap, .sandwich, .candyBar, .popTart, .water, .fruitJuice, .sportsDrink, .gum]
     var inventory: [VendingSelection : VendingItem]
@@ -72,7 +84,6 @@ class FoodVendingMachine: VendingMachine {
     func deposit(_ amount: Double) {
     }
 }
-
 
 
 
