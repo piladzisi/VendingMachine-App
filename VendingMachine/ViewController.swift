@@ -88,6 +88,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         totalLabel.text = "$00.00"
         priceLabel.text = "$0.00"
     }
+    
+    
+    
+    @IBAction func updateQuantity(_ sender: UIStepper) {
+        print(sender.value)
+        
+    }
     // MARK: UICollectionViewDataSource
    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
