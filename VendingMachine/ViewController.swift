@@ -38,11 +38,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionViewCells()
-        
-        balanceLabel.text = "$\(vendingMachine.amountDeposited)"
-        totalLabel.text = "$00.00"
-        priceLabel.text = "$0.00"
-        quantityLabel.text = "1"
+       
+        updateDisplayWith(balance: vendingMachine.amountDeposited, totalPrice: 0, itemPrice: 0, itemQuantity: 1)
        }
 
     override func didReceiveMemoryWarning() {
@@ -102,15 +99,15 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func updateTotalPrice(for item: VendingItem) {
-        totalLabel.text = "$\(item.price * quantityStepper.value)"
+        let totalPrice = item.price * quantityStepper.value
+        updateDisplayWith(totalPrice: totalPrice)
     }
     
-    
-    
     @IBAction func updateQuantity(_ sender: UIStepper) {
-        quantityLabel.text = "\(Int(quantityStepper.value))"
+        let quantity = Int(quantityStepper.value)
+        updateDisplayWith(itemQuantity: quantity)
         
-        if let currentSelection = currentSelection, let item = vendingMachine.item(forSlection: currentSelection) {
+        if let currentSelection = currentSelection, let item = vendingMachine.item(forSelection: currentSelection) {
             updateTotalPrice(for: item)
         }
     }
@@ -139,15 +136,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         updateCell(having: indexPath, selected: false)
         
         quantityStepper.value = 1
-        quantityLabel.text = "1"
+        updateDisplayWith(totalPrice: 0, itemQuantity: 1)
         
-        totalLabel.text = "$00.00"
         currentSelection = (vendingMachine.selection[indexPath.row])
         
-        if let currentSelection = currentSelection,  let item = vendingMachine.item(forSlection: currentSelection){
-           
-            priceLabel.text = "$\(item.price)"
-            totalLabel.text = "$\(item.price * quantityStepper.value)"
+        if let currentSelection = currentSelection,  let item = vendingMachine.item(forSelection: currentSelection){
+            let totalPrice = item.price * quantityStepper.value
+           updateDisplayWith( totalPrice: totalPrice, itemPrice: item.price)
         }
     }
     
