@@ -116,8 +116,9 @@ class FoodVendingMachine: VendingMachine {
             throw VendingMachineError.insufficientFunds(required: amountRequired)
         }
     }
+    
     func deposit(_ amount: Double) {
-        
+        amountDeposited += amount
     }
     func item(forSelection selection: VendingSelection) -> VendingItem? {
             return inventory[selection]
