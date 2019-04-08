@@ -64,7 +64,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     @IBAction func purchase() {
         if let currentSelection = currentSelection {
-            
+            do {
+                try vendingMachine.vend(selection: currentSelection, quantity: quantity)
+            } catch {
+                //FIXME: Error handling code
+            }
         } else {
             // FIXME: Alert user to no selection
         }
@@ -95,6 +99,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         updateCell(having: indexPath, selected: false)
+        
+        if let currentSelection = currentSelection,  let item = vendingMachine.item(forSlection: currentSelection){
+           
+            priceLabel.text = "$\(item.price)"
+            totalLabel.text = "$\(item.price * Double(quantity))"
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
