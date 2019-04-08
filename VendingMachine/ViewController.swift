@@ -18,6 +18,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet weak var quantityLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var quantityStepper: UIStepper!
+    
+    
     
     let vendingMachine: VendingMachine
     var currentSelection: VendingSelection?
@@ -41,6 +44,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         balanceLabel.text = "$\(vendingMachine.amountDeposited)"
         totalLabel.text = "$00.00"
         priceLabel.text = "$0.00"
+        quantityLabel.text = "1"
        }
 
     override func didReceiveMemoryWarning() {
@@ -88,12 +92,19 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         totalLabel.text = "$00.00"
         priceLabel.text = "$0.00"
     }
+    func updateTotalPrice(for item: VendingItem) {
+        totalLabel.text = "$\(item.price * Double(quantity))"
+    }
     
     
     
     @IBAction func updateQuantity(_ sender: UIStepper) {
-        print(sender.value)
+        quantity = Int(sender.value)
+        quantityLabel.text = "\(quantity)"
         
+        if let currentSelection = currentSelection, let item = vendingMachine.item(forSlection: currentSelection) {
+            updateTotalPrice(for: item)
+        }
     }
     // MARK: UICollectionViewDataSource
    
@@ -114,12 +125,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         updateCell(having: indexPath, selected: true)
-        
-        currentSelection = (vendingMachine.selection[indexPath.row])
-    }
+   }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         updateCell(having: indexPath, selected: false)
+        
+        quantityStepper.value = 1
+        quantityLabel.text = "1"
+        quantity = 1
+        
+        totalLabel.text = "$00.00"
+        currentSelection = (vendingMachine.selection[indexPath.row])
         
         if let currentSelection = currentSelection,  let item = vendingMachine.item(forSlection: currentSelection){
            
