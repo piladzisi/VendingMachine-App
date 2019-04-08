@@ -69,9 +69,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         if let currentSelection = currentSelection {
             do {
                 try vendingMachine.vend(selection: currentSelection, quantity: Int (quantityStepper.value))
-                updateDisplayWith(balance: vendingMachine.amountDeposited, totalPrice: 0.0, itemPrice: 0)
+                updateDisplayWith(balance: vendingMachine.amountDeposited, totalPrice: 0.0, itemPrice: 0, itemQuantity: 1)
+            } catch VendingMachineError.outOfStock{
+                showAlert()
             } catch {
-                //FIXME: Error handling code
+                //FIXME: other errors
             }
             
             if let indexPath = collectionView.indexPathsForSelectedItems?.first {
@@ -125,7 +127,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         return cell
     }
+    func showAlert() {
+        let alertController = UIAlertController(title: "Out of Stock", message: "This item is unavailable. Please make another selection", preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: dismissAlert)
+            alertController.addAction(okAction)
+            present(alertController, animated: true, completion:  nil)
+    }
     
+    func dismissAlert(sender: UIAlertAction) -> Void {
+        updateDisplayWith(balance: 0, totalPrice: 0, itemPrice: 0, itemQuantity: 1 )
+    }
     // MARK: - UICollectionViewDelegate
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
